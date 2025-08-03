@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if form.instance.id %}Edit{% else %}Create{% endif %} Project</title>
+  <style>
+    body {
+      font-family: "Trebuchet MS", sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .form-container {
+      background-color: #ffffff;
+      border-radius: 10px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: left;
+      color: #2c3e50;
+      margin-bottom: 10px;
+      font-size: 24px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-size: 16px;
+      color: #34495e;
+      margin-bottom: 5px;
+    }
+
+    input, select, textarea {
+      padding: 6px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      outline: none;
+      width: 90%;
+      margin-bottom: -3px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #0078D4;
+    }
+
+    .action-links {
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+      gap: 10px;
+    }
+
+    .action-links button,
+    .action-links a {
+      text-decoration: none;
+      font-size: 14px;
+      padding: 0 15px;
+      border-radius: 5px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+    }
+
+    .action-links button {
+      background-color: #0078D4;
+      border: none;
+    }
+
+    .action-links button:hover {
+      background-color: #005BB5;
+    }
+
+    .action-links a.back-to-list {
+      background-color: #27ae60;
+    }
+
+    .action-links a.back-to-list:hover {
+      background-color: #1e874b;
+    }
+
+    .action-links a.back-to-home {
+      background-color: #e74c3c;
+    }
+
+    .action-links a.back-to-home:hover {
+      background-color: #c0392b;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>{% if form.instance.id %}Edit{% else %}Create{% endif %} Project</h2>
+
+    <form method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+
+      <div class="action-links">
+        <button type="submit">{% if form.instance.id %}Update{% else %}Save{% endif %}</button>
+        <a href="{% url 'project_list' %}" class="back-to-list">Back to List</a>
+        <a href="{% url 'construction_department' %}" class="back-to-CD Module">Back to CD Module</a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

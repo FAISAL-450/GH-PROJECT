@@ -1,0 +1,176 @@
+{% block content %}
+<style>
+    
+.form-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+    border-radius: 5px;
+    /* Remove box-shadow to eliminate the outer border effect */
+    box-shadow: none;
+}
+
+    body, th, td, input, a, .nav-button, .filter-box, .apply-button, .action-button {
+        font-family: "Trebuchet MS", sans-serif;
+    }
+
+    h2 {
+        text-align: left;
+        color: #2c3e50;
+        margin-bottom: 12px;
+        font-size: 28px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 4px 8px;
+        text-align: left;
+        height: 18px;
+    }
+
+    th {
+        background-color: #0078D4;
+        color: white;
+    }
+
+    .nav-buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+  .nav-button{
+        background: #0078D4;
+        color: white;
+        padding: 8px;
+        border-radius: 4px;
+        text-decoration: none;
+        width: 125px;
+        height: 18px; /* Adjust this value as needed */
+        font-size: 14px;
+    }
+
+    .filter-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .filter-box {
+        width: 25%;
+        padding: 4px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: 2px solid #ccc;
+    }
+
+.apply-button {
+        width: 106px; /* Adjust this value to increase or decrease the width */
+        background: #dc3545;
+        color: white;
+        padding: 6px;
+        border-radius: 4px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        text-align: left;
+    }
+
+        /* Updated Action Button Styles */
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .action-button {
+        width: 60px;
+        height: 4px;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        text-decoration: none;
+        font-size: 14px;
+        border-radius: 5px;
+    }
+
+    .action-button.edit {
+        background: #28a745;
+        color: white;
+    }
+
+    .action-button.delete {
+        background: #dc3545;
+        color: white;
+    }
+
+</style>
+
+<div class="form-container">
+    <h2>Customer List</h2>
+
+    <!-- Navigation Buttons -->
+    <div class="nav-buttons">
+        <a href="{% url 'customer_create' %}" class="nav-button">➕ Add Customer</a>
+        <a href="{% url 'construction_department' %}" class="nav-button">🏠 Back to Module</a>
+    </div>
+
+    <!-- Filter by Name Box -->
+    <div class="filter-container">
+        <input type="text" id="filterName" class="filter-box" placeholder="Enter name to filter">
+        <button onclick="applyFilter()" class="apply-button">Apply Filter</button>
+    </div>
+
+    <!-- Customer Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Customer Name</th>
+                <th>Customer Email number</th>
+                <th>Customer Phone no</th>
+                <th>Customer detailed address</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for customer in customers %}
+            <tr>
+                <td>{{ customer.id }}</td>
+                <td class="name">{{ customer.customer_name }}</td>
+                <td>{{ customer.customer_email }}</td>
+                <td>{{ customer.customer_phone }}</td>
+                <td>{{ customer.customer_address }}</td>
+                <td>
+                    <div class="action-buttons">
+                        <a href="{% url 'customer_edit' customer.id %}" class="action-button edit">✏ Edit</a>
+                        <a href="{% url 'customer_delete' customer.id %}" class="action-button delete">🗑 Delete</a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function applyFilter() {
+        let input = document.getElementById("filterName").value.toLowerCase();
+        let rows = document.querySelectorAll("tbody tr");
+
+        rows.forEach(row => {
+            let name = row.querySelector(".name").textContent.toLowerCase();
+            row.style.display = name.includes(input) ? "" : "none";
+        });
+    }
+</script>
+
+{% endblock %}
