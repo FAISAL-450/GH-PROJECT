@@ -29,12 +29,29 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Project apps
-    'home',
     'construction_department',
     'sales_department',
     'project',
     'customer',
+    'home.apps.HomeConfig',
+    'azure_auth',
 ]
+
+AZURE_AUTH = {
+    "CLIENT_ID": os.getenv("AZURE_CLIENT_ID"),
+    "CLIENT_SECRET": os.getenv("AZURE_CLIENT_SECRET"),
+    "REDIRECT_URI": os.getenv("AZURE_REDIRECT_URI"),
+    "SCOPES": ["User.Read", "GroupMember.Read.All"],
+    "AUTHORITY": os.getenv("AZURE_AUTHORITY"), 
+    "USERNAME_ATTRIBUTE": "preferred_username",
+    "ROLES": {
+        "f2a25025-19e6-427f-a8ce-db6224097658": "Construction",
+        "75c3c3ff-3372-47a6-923e-bda304e98f6f": "Sales"
+    }
+}
+
+LOGIN_URL = "/azure_auth/login"
+LOGIN_REDIRECT_URL = "/"
 
 # ⚙️ Middleware
 MIDDLEWARE = [
@@ -102,3 +119,4 @@ if not DEBUG:
 
 # 🆔 Default primary key field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
