@@ -1,37 +1,24 @@
-import logging
-from django.dispatch import receiver
-from django.contrib.auth.signals import user_logged_in
-from django.contrib.auth.models import Group
 from django.conf import settings
+from django.contrib.auth.models import Group
+from django_auth_adfs.signals import post_authenticate
 
-logger = logging.getLogger(__name__)
+def sync_groups(sender, user, claims, **kwargs):
+    group_ids = claims.get("groups", [])
+    role_map = settings.AZURE_AUTH.get("ROLES", {})
+    assigned = []
 
-@receiver(user_logged_in)
-def assign_azure_ad_groups(sender, request, user, **kwargs):
-    # 🔍 Get Azure AD group IDs from session
-    azure_group_ids = request.session.get("azure_groups", [])
-    roles_mapping = settings.AZURE_AUTH.get("ROLES", {})
-
-    if not azure_group_ids:
-        logger.warning(f"[Azure AD] No group IDs found in session for user '{user.username}'")
-        return
-
-    # 🧹 Clear existing Django groups to avoid stale assignments
-    user.groups.clear()
-
-    assigned_groups = []
-
-    for azure_id in azure_group_ids:
-        group_name = roles_mapping.get(azure_id)
-        if group_name:
-            group, created = Group.objects.get_or_create(name=group_name)
+    for group_id in group_ids:
+        role_name = role_map.get(group_id)
+        if role_name:
+            group, _ = Group.objects.get_or_create(name=role_name)
             user.groups.add(group)
-            assigned_groups.append(group_name)
-            logger.info(f"[Azure AD] Assigned Django group '{group_name}' to user '{user.username}'")
+            assigned.append(role_name)
 
-    if assigned_groups:
-        logger.info(f"[Azure AD] Final Django groups for user '{user.username}': {assigned_groups}")
-    else:
-        logger.warning(f"[Azure AD] No matching Django groups for user '{user.username}'")
+    user.groups.exclude(name__in=assigned).filter(name__in=role_map.values()).delete()
+
+post_authenticate.connect(sync_groups)
+
+
+
 
 
