@@ -42,13 +42,11 @@ AZURE_AUTH = {
     "CLIENT_SECRET": os.getenv("AZURE_CLIENT_SECRET"),
     "REDIRECT_URI": os.getenv("AZURE_REDIRECT_URI"),
     "SCOPES": ["User.Read", "GroupMember.Read.All"],
-    "AUTHORITY": os.getenv("AZURE_AUTHORITY"), 
+    "AUTHORITY": os.getenv("AZURE_AUTHORITY"),
     "USERNAME_ATTRIBUTE": "preferred_username",
-    "ROLES": {
-        "f2a25025-19e6-427f-a8ce-db6224097658": "Construction",
-        "75c3c3ff-3372-47a6-923e-bda304e98f6f": "Sales"
-    }
 }
+# Group Mapping (loaded from environment)
+AZURE_GROUP_TO_DJANGO = json.loads(os.getenv("AZURE_GROUP_TO_DJANGO", "{}"))
 
 LOGIN_URL = "/azure_auth/login"
 LOGIN_REDIRECT_URL = "/"
