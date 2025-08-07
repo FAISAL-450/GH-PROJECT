@@ -21,7 +21,6 @@ urlpatterns = [
     path('', include('home.urls')),  # Homepage
     path('construction-department/', include('construction_department.urls')),  # ✅ Add this line
     path('sales-department/', include('sales_department.urls')),  # ✅ Add this line
-    path("azure_auth/", include("azure_auth.urls")),
-
+    
 ]
 
