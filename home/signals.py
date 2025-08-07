@@ -9,7 +9,3 @@ def assign_azure_groups_to_user(user, azure_group_ids):
 
 
 
-
-
-
-
