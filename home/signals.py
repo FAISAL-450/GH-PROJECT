@@ -1,17 +1,11 @@
 from django.contrib.auth.models import Group
-from django_auth_adfs.signals import post_authenticate
-from django.dispatch import receiver
+def assign_azure_groups_to_user(user, azure_group_ids):
+    for group_id in azure_group_ids:
+        group_name = AZURE_GROUP_MAP.get(group_id)
+        if group_name:
+            group, _ = Group.objects.get_or_create(name=group_name)
+            user.groups.add(group)
 
-@receiver(post_authenticate)
-def sync_user_groups(sender, user=None, claims=None, **kwargs):
-    group_names = claims.get("groups", [])
-    user.groups.clear()
-
-    for group_name in group_names:
-        group, _ = Group.objects.get_or_create(name=group_name)
-        user.groups.add(group)
-
-    user.save()
 
 
 

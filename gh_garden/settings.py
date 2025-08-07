@@ -36,6 +36,12 @@ INSTALLED_APPS = [
     'customer',
 ]
 
+AZURE_GROUP_MAP = {
+    "f2a25025-19e6-427f-a8ce-db6224097658": "Construction",
+    "75c3c3ff-3372-47a6-923e-bda304e98f6f": "Sales",
+}
+
+
 # ⚙️ Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
