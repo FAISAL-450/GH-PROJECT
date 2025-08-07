@@ -1,22 +1,19 @@
-from django.conf import settings
 from django.contrib.auth.models import Group
 from django_auth_adfs.signals import post_authenticate
+from django.dispatch import receiver
 
-def sync_groups(sender, user, claims, **kwargs):
-    group_ids = claims.get("groups", [])
-    role_map = settings.AZURE_AUTH.get("ROLES", {})
-    assigned = []
+@receiver(post_authenticate)
+def sync_user_groups(sender, user=None, claims=None, **kwargs):
+    group_names = claims.get("groups", [])
+    user.groups.clear()
 
-    for group_id in group_ids:
-        role_name = role_map.get(group_id)
-        if role_name:
-            group, _ = Group.objects.get_or_create(name=role_name)
-            user.groups.add(group)
-            assigned.append(role_name)
+    for group_name in group_names:
+        group, _ = Group.objects.get_or_create(name=group_name)
+        user.groups.add(group)
 
-    user.groups.exclude(name__in=assigned).filter(name__in=role_map.values()).delete()
+    user.save()
 
-post_authenticate.connect(sync_groups)
+
 
 
 
