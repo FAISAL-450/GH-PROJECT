@@ -42,6 +42,13 @@ AZURE_AD_TO_DJANGO_GROUPS = {
     "Dept Sales": "Sales",
 }
 
+# 📧 Azure AD email-to-Django group mapping (used in login signal)
+AZURE_AD_EMAIL_TO_GROUP = {
+    "helal@dzignscapeprofessionals.onmicrosoft.com": "Construction",
+    "payal@dzignscapeprofessionals.onmicrosoft.com": "Sales",
+    # Add more mappings here
+}
+
 # ⚙️ Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

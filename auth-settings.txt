@@ -1,0 +1,65 @@
+{
+  "properties": {
+    "platform": {
+      "enabled": true,
+      "runtimeVersion": "4.0"
+    },
+    "globalValidation": {
+      "unauthenticatedClientAction": "RedirectToLoginPage",
+      "redirectToProvider": "AzureActiveDirectory",
+      "requireAuthentication": true
+    },
+    "identityProviders": {
+      "azureActiveDirectory": {
+        "enabled": true,
+        "login": {
+          "disableWWWAuthenticate": false
+        },
+        "registration": {
+          "clientId": "49b6b5bf-ec9d-4a97-9202-1bf304e60ef1",
+          "openIdIssuer": "https://login.microsoftonline.com/530309b4-7b42-400e-9b38-eae5bef5408e/v2.0"
+        },
+        "validation": {
+          "defaultAuthorizationPolicy": {
+            "allowedPrincipals": {}
+          },
+          "jwtClaimChecks": {}
+        }
+      }
+    },
+    "login": {
+      "cookieExpiration": {
+        "convention": "FixedTime",
+        "timeToExpiration": "08:00:00"
+      },
+      "nonce": {
+        "nonceExpirationInterval": "00:05:00",
+        "validateNonce": true
+      },
+      "preserveUrlFragmentsForLogins": false,
+      "routes": {
+        "routes": [
+          {
+            "route": "/robots933456.txt",
+            "allowed": true
+          },
+          {
+            "route": "/healthz",
+            "allowed": true
+          },
+          {
+            "route": "/favicon.ico",
+            "allowed": true
+          }
+        ]
+      },
+      "tokenStore": {
+        "azureBlobStorage": {},
+        "enabled": false,
+        "fileSystem": {},
+        "tokenRefreshExtensionHours": 72.0
+      }
+    }
+  }
+}
+
