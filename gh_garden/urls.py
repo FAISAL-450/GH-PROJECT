@@ -16,11 +16,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.http import HttpResponse
+
+# Health check view
+def health_check_view(request):
+    return HttpResponse("OK", content_type="text/plain")
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('home.urls')),  # Homepage
     path('construction-department/', include('construction_department.urls')),  # ✅ Add this line
     path('sales-department/', include('sales_department.urls')),  # ✅ Add this line
-    
+
+    # ✅ Health check route for Azure App Service
+    path('robots933456.txt', health_check_view),
 ]
+
+
 
