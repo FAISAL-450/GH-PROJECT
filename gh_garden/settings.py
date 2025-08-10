@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # 🔐 Security
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'unsafe-default-key')
-DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
 
 # 🌍 Hosts and CSRF
 try:
@@ -36,16 +36,16 @@ INSTALLED_APPS = [
     'customer',
 ]
 
+# 🧩 Azure AD role-to-group mapping (used in middleware or signals)
 AZURE_AD_TO_DJANGO_GROUPS = {
     "Dept Construction": "Construction",
     "Dept Sales": "Sales",
 }
 
-
 # ⚙️ Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware' if not DEBUG else '',  # Enable in production
+    'whitenoise.middleware.WhiteNoiseMiddleware' if not DEBUG else None,
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -53,9 +53,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-MIDDLEWARE = [mw for mw in MIDDLEWARE if mw]  # Remove empty string if DEBUG
+# Remove None entries
+MIDDLEWARE = [mw for mw in MIDDLEWARE if mw]
 
-# 🌐 Root URLs and WSGI
+# 🌐 URL and WSGI
 ROOT_URLCONF = 'gh_garden.urls'
 WSGI_APPLICATION = 'gh_garden.wsgi.application'
 
@@ -76,7 +77,7 @@ TEMPLATES = [
     },
 ]
 
-# 🗄️ Database (switchable via env if needed)
+# 🗄️ Database
 DATABASES = {
     'default': {
         'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.sqlite3'),
@@ -102,9 +103,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Production static file handling
+# 🏭 Production static file handling
 if not DEBUG:
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # 🆔 Default primary key field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+

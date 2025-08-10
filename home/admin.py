@@ -1,3 +1,5 @@
 from django.contrib import admin
-
-# Register your models here.
+from .models import RoleOverride
+@admin.register(RoleOverride)
+class RoleOverrideAdmin(admin.ModelAdmin):
+    list_display = ('email', 'group_name')
