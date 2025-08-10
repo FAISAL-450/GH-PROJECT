@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # 🔐 Security
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'unsafe-default-key')
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 
 # 🌍 Hosts and CSRF
 try:
@@ -19,25 +19,6 @@ try:
     CSRF_TRUSTED_ORIGINS = json.loads(os.environ.get('CSRF_TRUSTED_ORIGINS', '[]'))
 except json.JSONDecodeError:
     CSRF_TRUSTED_ORIGINS = []
-
-# 🆔 Azure AD Credentials
-AZURE_AD_CLIENT_ID = os.environ.get('AZURE_AD_CLIENT_ID')
-AZURE_AD_CLIENT_SECRET = os.environ.get('AZURE_AD_CLIENT_SECRET')
-AZURE_AD_TENANT_ID = os.environ.get('AZURE_AD_TENANT_ID')
-
-AZURE_AUTH = {
-    "CLIENT_ID": AZURE_AD_CLIENT_ID,
-    "CLIENT_SECRET": AZURE_AD_CLIENT_SECRET,
-    "REDIRECT_URI": "https://gh-erp-app.azurewebsites.net/azure_auth/callback",
-    "AUTHORITY": f"https://login.microsoftonline.com/{AZURE_AD_TENANT_ID}",
-    "SCOPES": ["User.Read"],
-    "USERNAME_ATTRIBUTE": "mail",
-    "GROUP_ATTRIBUTE": "roles",
-    "ROLES": {
-        "f2a25025-19e6-427f-a8ce-db6224097658": "Construction",
-        "75c3c3ff-3372-47a6-923e-bda304e98f6f": "Sales",
-    }
-}
 
 # 📦 Installed apps
 INSTALLED_APPS = [
@@ -53,23 +34,18 @@ INSTALLED_APPS = [
     'sales_department',
     'project',
     'customer',
-    # Azure AD auth
-    'azure_auth',
 ]
 
-# 🔐 Auth
-LOGIN_URL = '/azure_auth/login'
-LOGIN_REDIRECT_URL = '/'
-
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',  # Keep only this
-]
+AZURE_AD_TO_DJANGO_GROUPS = {
+    "Dept Construction": "Construction",
+    "Dept Sales": "Sales",
+}
 
 
 # ⚙️ Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware' if not DEBUG else '',
+    'whitenoise.middleware.WhiteNoiseMiddleware' if not DEBUG else '',  # Enable in production
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -100,7 +76,7 @@ TEMPLATES = [
     },
 ]
 
-# 🗄️ Database
+# 🗄️ Database (switchable via env if needed)
 DATABASES = {
     'default': {
         'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.sqlite3'),
@@ -126,11 +102,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+# Production static file handling
 if not DEBUG:
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # 🆔 Default primary key field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-
