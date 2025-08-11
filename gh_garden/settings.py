@@ -43,17 +43,26 @@ AZURE_AD_EMAIL_TO_GROUP = {
 
 
 # ⚙️ Middleware
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware' if not DEBUG else '',  # Enable in production
+    *(['whitenoise.middleware.WhiteNoiseMiddleware'] if not DEBUG else []),
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'home.middleware.azure_ad_auto_login.AzureADAutoLoginMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
 MIDDLEWARE = [mw for mw in MIDDLEWARE if mw]  # Remove empty string if DEBUG
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+
+
 
 # 🌐 Root URLs and WSGI
 ROOT_URLCONF = 'gh_garden.urls'

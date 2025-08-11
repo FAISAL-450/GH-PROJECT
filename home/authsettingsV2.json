@@ -1,0 +1,9 @@
+{
+  "platform": {
+    "enabled": true,
+    "forwardedHeaders": [
+      "X-MS-CLIENT-PRINCIPAL",
+      "X-MS-CLIENT-PRINCIPAL-NAME"
+    ]
+  }
+}
