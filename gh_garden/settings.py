@@ -36,6 +36,12 @@ INSTALLED_APPS = [
     'customer',
 ]
 
+AZURE_AD_EMAIL_TO_GROUP = {
+    "helal@DzignscapeProfessionals.onmicrosoft.com": "Construction",
+    "payal@DzignscapeProfessionals.onmicrosoft.com": "Sales",
+}
+
+
 # 🧩 Azure AD role-to-group mapping (used in middleware or signals)
 AZURE_AD_TO_DJANGO_GROUPS = {
     "Dept Construction": "Construction",
